@@ -24,12 +24,12 @@ public class Tile {
 	}
 
 	public void render(Graphics g) {
-		if (tileID != -1)
-			g.drawImage(game.res.tiles[tileID], x, y, null);
+		if (tileID != -1) // If the tile ID is not -1
+			g.drawImage(game.res.tiles[tileID], x, y, null); // Display appropriate texture/image
 
-		if (showBorders) {
-			g.setColor(Color.WHITE);
-			g.drawRect(x, y, size, size);
+		if (showBorders) { // If it is allowed to show borders
+			g.setColor(Color.WHITE); // White color
+			g.drawRect(x, y, size, size); // Draw a border around image
 		}
 
 	}

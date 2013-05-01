@@ -19,7 +19,7 @@ public class Game extends Canvas implements Runnable {
 	InputHandler input;
 	Resources res = new Resources();
 
-	int tileSelection = 0;
+	int tileSelection = 0; // Used for selecting tiles for placement
 
 	Point mouseP = new Point(-1, -1);
 
@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
 
-	public void run() {
+	public void run() { // Typical
 		while (running) {
 			tick();
 			render();
@@ -47,7 +47,7 @@ public class Game extends Canvas implements Runnable {
 		System.exit(0);
 	}
 
-	public Game() {
+	public Game() { // Typical stuff
 		input = new InputHandler(this);
 
 		setMinimumSize(gameDim);
@@ -71,17 +71,19 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void init() {
+
+		// Tile generator
 		for (int y = 0; y < getHeight(); y += Tile.size) {
 			for (int x = 0; x < getWidth(); x += Tile.size) {
-				int randomTile = new Random().nextInt(100);
+				int randomTile = new Random().nextInt(100); // Random number between 0-100
 
-				if (randomTile >= 50) {
-					tileList.add(new Tile(x, y, 3));
-				} else {
-					tileList.add(new Tile(x, y, 0));
+				if (randomTile >= 50) { // If that number is 50+
+					tileList.add(new Tile(x, y, 3)); // Place grass
+				} else { // If not
+					tileList.add(new Tile(x, y, 0)); // Place dirt
 				}
 			}
-		}
+		} // End tile Generator
 	}
 
 	public void tick() {
@@ -94,19 +96,22 @@ public class Game extends Canvas implements Runnable {
 		for (Tile tile : tileList) {
 			tile.tick(this);
 
+			// If tile contains mouse
 			if (tile.bounding.contains(mouseP)) {
 				tile.showBorders = true;
 			} else {
 				tile.showBorders = false;
 			}
 
+			// Place tile
 			if (tile.bounding.contains(mouseP) && input.rightButton) {
 				tile.tileID = tileSelection;
 			}
 
-			if (tile.bounding.contains(mouseP) && input.leftButton) {
-				tile.tileID = -1;
-			}
+			// Delete tile
+			// if (tile.bounding.contains(mouseP) && input.leftButton) {
+			// tile.tileID = -1;
+			// }
 		}
 	}
 
@@ -128,10 +133,10 @@ public class Game extends Canvas implements Runnable {
 
 		g.setColor(Color.WHITE);
 		g.fillRect(0, this.getHeight() - 32, this.getWidth(), 32);
-		
-		g.drawImage(res.tileMap, 0, HEIGHT - 22, null);
-		g.setColor(Color.RED);
-		g.drawRect(tileSelection * 32, HEIGHT - 22, 32, 32);
+
+		g.drawImage(res.tileMap, 0, HEIGHT - 22, null); // Draws all tiles available for selection
+		g.setColor(Color.RED); // Set red color
+		g.drawRect(tileSelection * 32, HEIGHT - 22, 32, 32); // Selection box around the tile selected
 
 		g.dispose();
 		bs.show();

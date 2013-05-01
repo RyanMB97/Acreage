@@ -30,19 +30,19 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 	}
 
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (e.getButton() == MouseEvent.BUTTON1) { // If left button pressed
 			leftButton = true;
 		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
+		if (e.getButton() == MouseEvent.BUTTON3) { // If right button pressed
 			rightButton = true;
 		}
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (e.getButton() == MouseEvent.BUTTON1) { // If left button pressed
 			leftButton = false;
 		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
+		if (e.getButton() == MouseEvent.BUTTON3) { // If right button pressed
 			rightButton = false;
 		}
 	}
@@ -50,32 +50,32 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 	public void mouseDragged(MouseEvent e) {
 		game.mouseP = e.getPoint();
 
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (e.getButton() == MouseEvent.BUTTON1) { // If left button pressed
 			leftButton = true;
 		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
+		if (e.getButton() == MouseEvent.BUTTON3) { // If right button pressed
 			rightButton = true;
 		}
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		game.mouseP = e.getPoint();
+		game.mouseP = e.getPoint(); // Grab mouse position
 
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling up
-			if (game.tileSelection > 0) {
-				game.tileSelection--;
-			} else {
-				game.tileSelection = game.res.tiles.length - 1;
+		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling down
+			if (game.tileSelection > 0) { // If the tileSelection is greater than 0
+				game.tileSelection--; // Lower tileSelection
+			} else { // If not
+				game.tileSelection = game.res.tiles.length - 1; // Set the tileSelection back to maximum
 			}
 			System.out.println(game.tileSelection);
-		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling down
-			if (game.tileSelection < game.res.tiles.length - 1) {
-				game.tileSelection++;
-			} else {
-				game.tileSelection = 0;
+		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
+			if (game.tileSelection < game.res.tiles.length - 1) { // If tileSelection is lower than the maximum tiles
+				game.tileSelection++; // Increase tileSelection
+			} else { // If not
+				game.tileSelection = 0; // Set to 0
 			}
 		}
 	}

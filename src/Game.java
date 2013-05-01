@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -15,16 +13,16 @@ public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
 	BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	ArrayList<Tile> tileList = new ArrayList<Tile>();
 	InputHandler input;
 	Resources res = new Resources();
+	Level level;
 
 	int tileSelection = 0; // Used for selecting tiles for placement
 
 	Point mouseP = new Point(-1, -1);
 
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.3";
+	public static final String TITLE = "Acreage In-Dev 0.0.4";
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
@@ -35,10 +33,59 @@ public class Game extends Canvas implements Runnable {
 
 	public static int xOffset = 0, yOffset = 0;
 
-	public void run() { // Typical
+	// Variables for the FPS and UPS counter
+	public int ticks = 0;
+	private int frames = 0;
+	private int FPS = 0;
+	private int UPS = 0;
+	static double delta;
+
+	// Used in the "run" method to limit the frame rate to the UPS
+	boolean limitFrameRate = true;
+	boolean shouldRender;
+
+	public void run() {
+		long lastTime = System.nanoTime();
+		double nsPerTick = 1000000000D / 60D;
+
+		long lastTimer = System.currentTimeMillis();
+		delta = 0D;
+
 		while (running) {
-			tick();
-			render();
+			long now = System.nanoTime();
+			delta += (now - lastTime) / nsPerTick;
+			lastTime = now;
+
+			// If you want to limit frame rate, shouldRender = false
+			if (limitFrameRate) {
+				shouldRender = false;
+			} else {
+				shouldRender = true;
+			}
+
+			// If the time between ticks = 1, then various things (shouldRender = true, keeps FPS locked at UPS)
+			while (delta >= 1) {
+				ticks++;
+				tick();
+				delta -= 1;
+				shouldRender = true;
+			}
+
+			// If you should render, render!
+			if (shouldRender) {
+				frames++;
+				render();
+			}
+
+			// Reset stuff every second for the new "FPS" and "UPS"
+			if (System.currentTimeMillis() - lastTimer >= 1000) {
+				lastTimer += 1000;
+				FPS = frames;
+				UPS = ticks;
+				frames = 0;
+				ticks = 0;
+				frame.setTitle(TITLE + " FPS: " + FPS + " UPS: " + UPS);
+			}
 		}
 	}
 
@@ -54,11 +101,12 @@ public class Game extends Canvas implements Runnable {
 
 	public Game() { // Typical stuff
 		input = new InputHandler(this);
+		level = new Level(this);
 
 		setMinimumSize(gameDim);
 		setMaximumSize(gameDim);
 		setPreferredSize(gameDim);
-		frame = new JFrame(TITLE);
+		frame = new JFrame(TITLE + " FPS: " + FPS + " UPS: " + UPS);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
@@ -76,63 +124,26 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void init() {
-
-		// Tile generator
-		for (int y = 0; y < worldHeight; y++) {
-			for (int x = 0; x < worldWidth; x++) {
-				int randomTile = new Random().nextInt(100); // Random number between 0-100
-
-				if (randomTile >= 50) { // If that number is 50+
-					tileList.add(new Tile(x * 32, y * 32, 3)); // Place grass
-				} else { // If not
-					tileList.add(new Tile(x * 32, y * 32, 0)); // Place dirt
-				}
-			}
-		} // End tile Generator
 	}
 
 	public void tick() {
-		tileStuff();
+		level.updateLevel(this);
 		scanInput();
 	}
 
 	private void scanInput() {
 		// World Movement
 		if (input.left.down && xOffset > 0) {
-			xOffset -= 5;
+			xOffset -= 5 * delta;
 		}
-		if (input.right.down && xOffset < (worldWidth * 32) - WIDTH) {
-			xOffset += 5;
+		if (input.right.down && xOffset < (worldWidth * 32) - WIDTH - 16) {
+			xOffset += 5 * delta;
 		}
 		if (input.up.down && yOffset > 0) {
-			yOffset -= 5;
+			yOffset -= 5 * delta;
 		}
 		if (input.down.down && yOffset < (worldHeight * 32) - HEIGHT) {
-			yOffset += 5;
-		}
-	}
-
-	private void tileStuff() {
-
-		for (Tile tile : tileList) {
-			tile.tick(this);
-
-			// If tile contains mouse
-			if (tile.bounding.contains(mouseP)) {
-				tile.showBorders = true;
-			} else {
-				tile.showBorders = false;
-			}
-
-			// Place tile
-			if (tile.bounding.contains(mouseP) && input.rightButton) {
-				tile.tileID = tileSelection;
-			}
-
-			// Delete tile
-			// if (tile.bounding.contains(mouseP) && input.leftButton) {
-			// tile.tileID = -1;
-			// }
+			yOffset += 5 * delta;
 		}
 	}
 
@@ -148,9 +159,7 @@ public class Game extends Canvas implements Runnable {
 
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
-		for (Tile tile : tileList) {
-			tile.render(g);
-		}
+		level.renderLevel(g);
 
 		g.setColor(Color.WHITE);
 		g.fillRect(0, this.getHeight() - 32, this.getWidth(), 32);

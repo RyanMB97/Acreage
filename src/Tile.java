@@ -6,10 +6,13 @@ public class Tile {
 	public int x, y, tileID = 0;
 	public int oX, oY; // Original x,y coords when created
 	public static int size = 32;
-	Rectangle bounding;
-	boolean showBorders = false;
+	Rectangle bounding; // Used to check if the mouse is within the tile
+	boolean showBorders = false; // Used to show the border around current mouse-block
 
 	Game game;
+	public boolean hasPlants = false;
+	private int plantGrowth = 0;
+	private int growthTime = 4;
 
 	public Tile(int x, int y, int tileID) {
 		this.oX = x;
@@ -25,6 +28,14 @@ public class Tile {
 		x = oX - Game.xOffset; // Current x after movement, Offset, etc
 		y = oY - Game.yOffset; // Current y after movement, Offset, etc
 		bounding.setBounds(x, y, size, size);
+
+		growPlants();
+	}
+
+	private void growPlants() {
+		if (game.ticks % 60 == 0 && hasPlants && plantGrowth < growthTime) {
+			plantGrowth++;
+		}
 	}
 
 	public void render(Graphics g) {
@@ -33,7 +44,18 @@ public class Tile {
 
 		if (showBorders) { // If it is allowed to show borders
 			g.setColor(Color.WHITE); // White color
-			g.drawRect(x, y, size, size); // Draw a border around image
+			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
+		}
+		
+		if(hasPlants){
+			g.setColor(Color.BLACK); // White color
+			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
+		}
+
+		if (hasPlants) {
+			g.setColor(Color.WHITE);
+			//g.drawString("Growth: " + plantGrowth, x, y);
+			g.drawImage(game.res.plants[plantGrowth], x, y, null);
 		}
 
 	}

@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 
 public class Tile {
 	public int x, y, tileID = 0;
+	public int oX, oY; // Original x,y coords when created
 	public static int size = 32;
 	Rectangle bounding;
 	boolean showBorders = false;
@@ -11,8 +12,8 @@ public class Tile {
 	Game game;
 
 	public Tile(int x, int y, int tileID) {
-		this.x = x;
-		this.y = y;
+		this.oX = x;
+		this.oY = y;
 		this.tileID = tileID;
 		bounding = new Rectangle(x, y, size, size);
 		bounding.setBounds(x, y, size, size);
@@ -21,6 +22,9 @@ public class Tile {
 	public void tick(Game game) {
 		this.game = game;
 
+		x = oX - Game.xOffset; // Current x after movement, Offset, etc
+		y = oY - Game.yOffset; // Current y after movement, Offset, etc
+		bounding.setBounds(x, y, size, size);
 	}
 
 	public void render(Graphics g) {

@@ -24,11 +24,16 @@ public class Game extends Canvas implements Runnable {
 	Point mouseP = new Point(-1, -1);
 
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.2";
+	public static final String TITLE = "Acreage In-Dev 0.0.3";
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
+
+	int worldWidth = 150;
+	int worldHeight = 150;
+
+	public static int xOffset = 0, yOffset = 0;
 
 	public void run() { // Typical
 		while (running) {
@@ -73,14 +78,14 @@ public class Game extends Canvas implements Runnable {
 	private void init() {
 
 		// Tile generator
-		for (int y = 0; y < getHeight(); y += Tile.size) {
-			for (int x = 0; x < getWidth(); x += Tile.size) {
+		for (int y = 0; y < worldHeight; y++) {
+			for (int x = 0; x < worldWidth; x++) {
 				int randomTile = new Random().nextInt(100); // Random number between 0-100
 
 				if (randomTile >= 50) { // If that number is 50+
-					tileList.add(new Tile(x, y, 3)); // Place grass
+					tileList.add(new Tile(x * 32, y * 32, 3)); // Place grass
 				} else { // If not
-					tileList.add(new Tile(x, y, 0)); // Place dirt
+					tileList.add(new Tile(x * 32, y * 32, 0)); // Place dirt
 				}
 			}
 		} // End tile Generator
@@ -88,7 +93,23 @@ public class Game extends Canvas implements Runnable {
 
 	public void tick() {
 		tileStuff();
+		scanInput();
+	}
 
+	private void scanInput() {
+		// World Movement
+		if (input.left.down && xOffset > 0) {
+			xOffset -= 5;
+		}
+		if (input.right.down && xOffset < (worldWidth * 32) - WIDTH) {
+			xOffset += 5;
+		}
+		if (input.up.down && yOffset > 0) {
+			yOffset -= 5;
+		}
+		if (input.down.down && yOffset < (worldHeight * 32) - HEIGHT) {
+			yOffset += 5;
+		}
 	}
 
 	private void tileStuff() {

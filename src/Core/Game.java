@@ -1,3 +1,5 @@
+package Core;
+
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
@@ -9,36 +11,48 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import Entities.Player;
+import Level.Level;
+
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
 	BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	InputHandler input;
-	Resources res = new Resources();
-	Level level;
+	public InputHandler input;
+	public GameResourceLoader res = new GameResourceLoader();
+	public Level level;
+	public Player player;
+	public Inventory inv;
+	public Debug debug;
 
-	int tileSelection = 0; // Used for selecting tiles for placement
+	public int tileSelection = 0; // Used for selecting tiles for placement
 
-	Point mouseP = new Point(-1, -1);
+	public Point mouseP = new Point(-1, -1);
 
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.4";
+	public static final String TITLE = "Acreage In-Dev 0.0.5";
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
 
-	int worldWidth = 150;
-	int worldHeight = 150;
+	public int worldWidth = 150;
+	public int worldHeight = 150;
 
-	public static int xOffset = 0, yOffset = 0;
+	public int xOffset = 0;
+	public int yOffset = 0;
 
 	// Variables for the FPS and UPS counter
 	public int ticks = 0;
 	private int frames = 0;
 	private int FPS = 0;
 	private int UPS = 0;
-	static double delta;
+	public static double delta;
+
+	// Options
+	boolean showInventory = false;
+	boolean showDebug = false;
+	public boolean showGrid = false;
 
 	// Used in the "run" method to limit the frame rate to the UPS
 	boolean limitFrameRate = true;
@@ -102,6 +116,9 @@ public class Game extends Canvas implements Runnable {
 	public Game() { // Typical stuff
 		input = new InputHandler(this);
 		level = new Level(this);
+		player = new Player();
+		inv = new Inventory();
+		debug = new Debug(this);
 
 		setMinimumSize(gameDim);
 		setMaximumSize(gameDim);
@@ -128,23 +145,7 @@ public class Game extends Canvas implements Runnable {
 
 	public void tick() {
 		level.updateLevel(this);
-		scanInput();
-	}
-
-	private void scanInput() {
-		// World Movement
-		if (input.left.down && xOffset > 0) {
-			xOffset -= 5 * delta;
-		}
-		if (input.right.down && xOffset < (worldWidth * 32) - WIDTH - 16) {
-			xOffset += 5 * delta;
-		}
-		if (input.up.down && yOffset > 0) {
-			yOffset -= 5 * delta;
-		}
-		if (input.down.down && yOffset < (worldHeight * 32) - HEIGHT) {
-			yOffset += 5 * delta;
-		}
+		player.tick(this);
 	}
 
 	public void render() {
@@ -161,11 +162,20 @@ public class Game extends Canvas implements Runnable {
 
 		level.renderLevel(g);
 
+		player.render(g);
+
+		if (showInventory) {
+			inv.render(g);
+		}
+		if (showDebug) {
+			debug.render(g);
+		}
+
 		g.setColor(Color.WHITE);
-		g.fillRect(0, this.getHeight() - 32, this.getWidth(), 32);
+		g.fillRect(0, this.getHeight() - 33, this.getWidth(), 33);
 
 		g.drawImage(res.tileMap, 0, HEIGHT - 22, null); // Draws all tiles available for selection
-		g.setColor(Color.RED); // Set red color
+		g.setColor(Color.CYAN); // Set red color
 		g.drawRect(tileSelection * 32, HEIGHT - 22, 32, 32); // Selection box around the tile selected
 
 		g.dispose();

@@ -1,3 +1,5 @@
+package Core;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -45,11 +47,12 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	public Key right = new Key();
 	public Key up = new Key();
 	public Key down = new Key();
+	public Key I = new Key();
 
 	Game game;
 
-	boolean leftButton = false;
-	boolean rightButton = false;
+	public boolean leftButton = false;
+	public boolean rightButton = false;
 
 	public InputHandler(Game game) {
 		game.addMouseListener(this);
@@ -112,7 +115,6 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 			} else { // If not
 				game.tileSelection = game.res.tiles.length - 1; // Set the tileSelection back to maximum
 			}
-			System.out.println(game.tileSelection);
 		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
 			if (game.tileSelection < game.res.tiles.length - 1) { // If tileSelection is lower than the maximum tiles
 				game.tileSelection++; // Increase tileSelection
@@ -147,6 +149,15 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
 	public void keyPressed(KeyEvent e) {
 		toggle(e, true);
+
+		if (e.getKeyCode() == KeyEvent.VK_I)
+			game.showInventory = !game.showInventory;
+		if (e.getKeyCode() == KeyEvent.VK_F3)
+			game.showDebug = !game.showDebug;
+		if (e.getKeyCode() == KeyEvent.VK_G)
+			game.showGrid = !game.showGrid;
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			System.exit(0);
 	}
 
 	public void keyReleased(KeyEvent e) {

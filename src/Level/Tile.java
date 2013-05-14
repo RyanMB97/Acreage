@@ -16,6 +16,8 @@ public abstract class Tile {
 	boolean hasPlants = false;
 	int plantGrowth = 0;
 	int growthTime = 4;
+	
+	boolean hasRock;
 
 	public abstract void tick(Game game);
 

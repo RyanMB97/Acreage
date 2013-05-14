@@ -29,5 +29,4 @@ public class Inventory {
 		g.drawString(resourceNames[wheatID] + ": " + resourceAmounts[wheatID], 0, 25);
 		g.drawString(resourceNames[stoneID] + ": " + resourceAmounts[stoneID], 0, 40);
 	}
-
 }

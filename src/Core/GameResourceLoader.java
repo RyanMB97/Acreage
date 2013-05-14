@@ -9,10 +9,13 @@ public class GameResourceLoader {
 
 	public BufferedImage tileMap; // All tiles in one image to be seperated
 	public BufferedImage tiles[] = new BufferedImage[10]; // Each seperate tile
-	public String tileNames[] = { "Dirt", "Plowed Earth", "Stone", "Grass", "Null", "Null", "Null", "Null", "Null", "Null" }; // Names of tiles
+	public String tileNames[] = { "Dirt", "Plowed Earth", "Stone", "Grass", "Stone w/ Rock", "Null", "Null", "Null", "Null", "Null" }; // Names of tiles
 
 	public BufferedImage plantMap;
 	public BufferedImage plants[] = new BufferedImage[5];
+	
+	public BufferedImage playerMap;
+	public BufferedImage playerFaces[] = new BufferedImage[4];
 
 	public GameResourceLoader() {
 		loadImages();
@@ -33,7 +36,11 @@ public class GameResourceLoader {
 			for (int i = 0; i < plants.length; i++) { // For every tile that there should be
 				plants[i] = plantMap.getSubimage(i * 32, 0, 32, 32); // Create a subimage from tile map, and store it as a seperate image
 			}
-
+			
+			playerMap = ImageIO.read(this.getClass ().getClassLoader ().getResourceAsStream("Player.png"));
+			for (int i = 0; i < playerFaces.length; i++) { // For every tile that there should be
+				playerFaces[i] = playerMap.getSubimage(i * 32, 0, 32, 32); // Create a subimage from tile map, and store it as a separate image
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

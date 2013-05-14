@@ -1,6 +1,7 @@
 package Level;
 
 import java.awt.Graphics;
+import java.util.Random;
 
 import Core.Game;
 
@@ -18,8 +19,21 @@ public class Level {
 		// Tile generator
 		for (int y = 0; y < game.worldHeight; y++) {
 			for (int x = 0; x < game.worldWidth; x++) {
-
-				tileArray[x][y] = new GrassTile(x * 32, y * 32, game); // Place grass
+				int tileRandomizer = new Random().nextInt(3);
+				switch (tileRandomizer) {
+				case 0:
+					tileArray[x][y] = new DirtTile(x * 32, y * 32, game); // Place dirt
+					break;
+				case 1:
+					tileArray[x][y] = new StoneTile(x * 32, y * 32, game); // Place stone
+					break;
+				case 2:
+					tileArray[x][y] = new GrassTile(x * 32, y * 32, game); // Place grass
+					break;
+				default:
+					tileArray[x][y] = new GrassTile(x * 32, y * 32, game); // Place grass
+					break;
+				}
 			}
 		} // End tile Generator
 	} // End generateLevel
@@ -30,7 +44,7 @@ public class Level {
 		for (int y = 0; y < game.worldHeight; y++) {
 			for (int x = 0; x < game.worldWidth; x++) {
 				tileArray[x][y].tick(game);
-
+				
 				// If tile contains mouse
 				if (tileArray[x][y].bounding.contains(game.mouseP)) {
 					tileArray[x][y].showBorders = true;
@@ -58,7 +72,7 @@ public class Level {
 			tileArray[x][y].tileID = 1;
 			break;
 		case 2: // Stone
-			tileArray[x][y] = new StoneTile(x * 32, y * 32, game);
+			tileArray[x][y] = new StoneTile(x * 32, y * 32, game); // Place stone
 			tileArray[x][y].tileID = 2;
 			break;
 		case 3: // Grass
@@ -77,8 +91,7 @@ public class Level {
 				tileArray[x][y].hasPlants = true;
 				game.inv.resourceAmounts[game.inv.seedID] -= 1;
 				game.input.leftButton = false;
-				System.out.println("Changed hasPlants");
-			}else if (tileArray[x][y].hasPlants && tileArray[x][y].plantGrowth == tileArray[x][y].growthTime) {
+			} else if (tileArray[x][y].hasPlants && tileArray[x][y].plantGrowth == tileArray[x][y].growthTime) {
 				game.inv.addResource(game.inv.wheatID, 1);
 				tileArray[x][y].hasPlants = false;
 				tileArray[x][y].plantGrowth = 0;
@@ -86,12 +99,15 @@ public class Level {
 			}
 			break;
 		case 2: // Stone
-			game.inv.addResource(game.inv.stoneID, 1);
+			if (tileArray[x][y].hasRock) {
+				game.inv.addResource(game.inv.stoneID, 1);
+			}
 			game.input.leftButton = false;
 			break;
 		case 3: // Grass
-			System.out.println("Grass");
 			break;
+		default:
+			System.out.println("Left Click Switch-Statement Fell Through");
 		} // End switch
 	} // End left-click
 

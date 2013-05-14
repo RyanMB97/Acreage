@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
 	public Point mouseP = new Point(-1, -1);
 
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.5";
+	public static final String TITLE = "Acreage In-Dev 0.0.6";
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
@@ -47,7 +47,7 @@ public class Game extends Canvas implements Runnable {
 	private int frames = 0;
 	private int FPS = 0;
 	private int UPS = 0;
-	public static double delta;
+	public double delta;
 
 	// Options
 	boolean showInventory = false;
@@ -114,12 +114,6 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public Game() { // Typical stuff
-		input = new InputHandler(this);
-		level = new Level(this);
-		player = new Player();
-		inv = new Inventory();
-		debug = new Debug(this);
-
 		setMinimumSize(gameDim);
 		setMaximumSize(gameDim);
 		setPreferredSize(gameDim);
@@ -141,11 +135,16 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void init() {
+		input = new InputHandler(this);
+		level = new Level(this);
+		player = new Player();
+		inv = new Inventory();
+		debug = new Debug(this);
 	}
 
 	public void tick() {
-		level.updateLevel(this);
 		player.tick(this);
+		level.updateLevel(this);
 	}
 
 	public void render() {
@@ -161,7 +160,6 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
 		level.renderLevel(g);
-
 		player.render(g);
 
 		if (showInventory) {

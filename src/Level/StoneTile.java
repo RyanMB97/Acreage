@@ -3,20 +3,31 @@ package Level;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Random;
 
 import Core.Game;
 
 public class StoneTile extends Tile {
 
-	int tileID = 2;
-
 	public StoneTile(int x, int y, Game game) {
 		this.game = game;
 		this.oX = x;
 		this.oY = y;
-		
+
 		bounding = new Rectangle(x, y, size, size);
 		bounding.setBounds(x, y, size, size);
+		tileID = 2;
+
+		int randomRock = new Random().nextInt(2);
+		switch (randomRock) {
+		case 0:
+			hasRock = true;
+			break;
+		case 1:
+			hasRock = false;
+			break;
+		}
+
 	}
 
 	public void tick(Game game) {
@@ -29,7 +40,11 @@ public class StoneTile extends Tile {
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(game.res.tiles[tileID], x, y, game);
+		if (!hasRock) {
+			g.drawImage(game.res.tiles[tileID], x, y, game);
+		} else {
+			g.drawImage(game.res.tiles[4], x, y, game);
+		}
 
 		if (game.showGrid) { // If the player wants to draw grids
 			g.setColor(Color.WHITE); // White color

@@ -1,6 +1,5 @@
 package Entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -12,7 +11,10 @@ public class Player {
 	public int x, y;
 	int width = 16, height = 32;
 	Rectangle bounding;
-	int speed = 2;
+	double speed = 2;
+	public int toolSelected = 0;
+
+	public int directionFacing = 0; // 0 = Down, 1 = Up, 2 = Left, 3 = Right
 
 	boolean canLeft = true, canRight = true, canUp = true, canDown = true;
 
@@ -27,20 +29,34 @@ public class Player {
 	public void tick(Game game) {
 		this.game = game;
 		bounding.setBounds(x, y, width, height);
+		speed = 2 * game.delta;
 
 		worldEdgeCollision();
 
+		movement();
+	}
+
+	private void movement() {
+
 		if (game.input.left.down && canLeft) {
-			game.xOffset -= speed * Game.delta;
+			game.xOffset -= speed;
+			directionFacing = 2;
+			System.out.println(speed);
 		}
 		if (game.input.right.down && canRight) {
-			game.xOffset += speed * Game.delta;
+			game.xOffset += speed;
+			directionFacing = 3;
+			System.out.println(speed);
 		}
 		if (game.input.up.down && canUp) {
-			game.yOffset -= speed * Game.delta;
+			game.yOffset -= speed;
+			directionFacing = 1;
+			System.out.println(speed);
 		}
 		if (game.input.down.down && canDown) {
-			game.yOffset += speed * Game.delta;
+			game.yOffset += speed;
+			directionFacing = 0;
+			System.out.println(speed);
 		}
 	}
 
@@ -71,7 +87,8 @@ public class Player {
 	}
 
 	public void render(Graphics g) {
-		g.setColor(Color.RED);
-		g.fill3DRect(x, y, width, height, false);
+		// g.setColor(Color.RED);
+		// g.fill3DRect(x, y, width, height, false);
+		g.drawImage(game.res.playerFaces[directionFacing], x, y, game);
 	}
 }

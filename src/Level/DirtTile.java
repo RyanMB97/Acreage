@@ -8,8 +8,6 @@ import Core.Game;
 
 public class DirtTile extends Tile {
 
-	int tileID = 0;
-
 	public DirtTile(int x, int y, Game game) {
 		this.game = game;
 		this.oX = x;
@@ -17,6 +15,7 @@ public class DirtTile extends Tile {
 		
 		bounding = new Rectangle(x, y, size, size);
 		bounding.setBounds(x, y, size, size);
+		tileID = 0;
 	}
 
 	public void tick(Game game) {

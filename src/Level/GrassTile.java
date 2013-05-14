@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import Core.Game;
 
 public class GrassTile extends Tile {
-	int tileID = 3;
 
 	public GrassTile(int x, int y, Game game) {
 		this.game = game;
@@ -16,6 +15,7 @@ public class GrassTile extends Tile {
 		
 		bounding = new Rectangle(x, y, size, size);
 		bounding.setBounds(x, y, size, size);
+		tileID = 3;
 	}
 
 	public void tick(Game game) {

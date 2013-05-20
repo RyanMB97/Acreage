@@ -13,11 +13,13 @@ public abstract class Tile {
 	Rectangle bounding; // Used to check if the mouse is within the tile
 	boolean showBorders = false; // Used to show the border around current mouse-block
 	
+	// Plowed tile
 	boolean hasPlants = false;
 	int plantGrowth = 0;
 	int growthTime = 4;
 	
-	boolean hasRock;
+	boolean hasRock = false; // Stone tile
+	boolean hasTree = false; // Grass tile
 
 	public abstract void tick(Game game);
 

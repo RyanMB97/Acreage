@@ -110,16 +110,16 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling down
-			if (game.tileSelection > 0) { // If the tileSelection is greater than 0
-				game.tileSelection--; // Lower tileSelection
+			if (game.player.toolSelected > 1) { // If the tileSelection is greater than 0
+				game.player.toolSelected--; // Lower tileSelection
 			} else { // If not
-				game.tileSelection = game.res.tiles.length - 1; // Set the tileSelection back to maximum
+				game.player.toolSelected = game.tools.length; // Set the tileSelection back to maximum
 			}
 		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
-			if (game.tileSelection < game.res.tiles.length - 1) { // If tileSelection is lower than the maximum tiles
-				game.tileSelection++; // Increase tileSelection
+			if (game.player.toolSelected < game.tools.length) { // If tileSelection is lower than the maximum tiles
+				game.player.toolSelected++; // Increase tileSelection
 			} else { // If not
-				game.tileSelection = 0; // Set to 0
+				game.player.toolSelected = 1; // Set to 0
 			}
 		}
 	}
@@ -150,14 +150,25 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	public void keyPressed(KeyEvent e) {
 		toggle(e, true);
 
-		if (e.getKeyCode() == KeyEvent.VK_I)
-			game.showInventory = !game.showInventory;
+		// Misc
 		if (e.getKeyCode() == KeyEvent.VK_F3)
 			game.showDebug = !game.showDebug;
 		if (e.getKeyCode() == KeyEvent.VK_G)
 			game.showGrid = !game.showGrid;
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
+		// Tool Selection
+		if (e.getKeyCode() == KeyEvent.VK_1)
+			game.player.toolSelected = 1;
+		if (e.getKeyCode() == KeyEvent.VK_2)
+			game.player.toolSelected = 2;
+		if (e.getKeyCode() == KeyEvent.VK_3)
+			game.player.toolSelected = 3;
+		if (e.getKeyCode() == KeyEvent.VK_4)
+			game.player.toolSelected = 4;
+		if (e.getKeyCode() == KeyEvent.VK_5)
+			game.player.toolSelected = 5;
+
 	}
 
 	public void keyReleased(KeyEvent e) {

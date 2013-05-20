@@ -7,9 +7,11 @@ public class Inventory {
 	public int seedID = 0;
 	public int wheatID = 1;
 	public int stoneID = 2;
+	public int stickID = 3;
+	public int lumberID = 4;
 
-	public int resourceAmounts[] = { 100, 0, 0 };
-	String resourceNames[] = { "Seed", "Wheat", "Stone" };
+	public int resourceAmounts[] = { 100, 0, 0, 0, 0};
+	String resourceNames[] = { "Seed", "Wheat", "Stone", "Sticks", "Lumber" };
 
 	public Inventory() {
 
@@ -25,8 +27,8 @@ public class Inventory {
 		g.fillRect(0, 0, 100, Game.HEIGHT / 3);
 
 		g.setColor(Color.BLACK);
-		g.drawString(resourceNames[seedID] + ": " + resourceAmounts[seedID], 0, 10);
-		g.drawString(resourceNames[wheatID] + ": " + resourceAmounts[wheatID], 0, 25);
-		g.drawString(resourceNames[stoneID] + ": " + resourceAmounts[stoneID], 0, 40);
+		for(int i = 0; i < resourceNames.length; i++){
+			g.drawString(resourceNames[i] + ": " + resourceAmounts[i], 0, i * 10 + 10);
+		}
 	}
 }

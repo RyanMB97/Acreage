@@ -13,6 +13,11 @@ import javax.swing.JFrame;
 
 import Entities.Player;
 import Level.Level;
+import Tools.Axe;
+import Tools.Hoe;
+import Tools.Pickaxe;
+import Tools.Shovel;
+import Tools.Tool;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -25,14 +30,14 @@ public class Game extends Canvas implements Runnable {
 	public Inventory inv;
 	public Debug debug;
 
-	public int tileSelection = 0; // Used for selecting tiles for placement
-
 	public Point mouseP = new Point(-1, -1);
 
+	public Tool tools[] = new Tool[4];
+
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.6";
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
+	public static final String TITLE = "Acreage In-Dev 0.0.7";
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 400;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
 
@@ -50,7 +55,6 @@ public class Game extends Canvas implements Runnable {
 	public double delta;
 
 	// Options
-	boolean showInventory = false;
 	boolean showDebug = false;
 	public boolean showGrid = false;
 
@@ -140,9 +144,17 @@ public class Game extends Canvas implements Runnable {
 		player = new Player();
 		inv = new Inventory();
 		debug = new Debug(this);
+
+		tools[0] = new Axe(this);
+		tools[1] = new Pickaxe(this);
+		tools[2] = new Shovel(this);
+		tools[3] = new Hoe(this);
 	}
 
 	public void tick() {
+		for (int i = 0; i < tools.length; i++) {
+			tools[i].tick(this);
+		}
 		player.tick(this);
 		level.updateLevel(this);
 	}
@@ -161,20 +173,18 @@ public class Game extends Canvas implements Runnable {
 
 		level.renderLevel(g);
 		player.render(g);
+		inv.render(g);
 
-		if (showInventory) {
-			inv.render(g);
-		}
 		if (showDebug) {
 			debug.render(g);
 		}
 
-		g.setColor(Color.WHITE);
-		g.fillRect(0, this.getHeight() - 33, this.getWidth(), 33);
-
-		g.drawImage(res.tileMap, 0, HEIGHT - 22, null); // Draws all tiles available for selection
-		g.setColor(Color.CYAN); // Set red color
-		g.drawRect(tileSelection * 32, HEIGHT - 22, 32, 32); // Selection box around the tile selected
+		for (int i = 0; i < tools.length; i++) {
+			tools[i].render(g);
+		}
+		
+		g.setColor(Color.DARK_GRAY);
+		g.drawRect(player.toolSelected * 32 + 68, 0, 32, 32);
 
 		g.dispose();
 		bs.show();

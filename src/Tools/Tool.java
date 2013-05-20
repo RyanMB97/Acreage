@@ -13,5 +13,4 @@ public abstract class Tool extends Item {
 	public abstract void tick(Game game);
 
 	public abstract void render(Graphics g);
-
 }

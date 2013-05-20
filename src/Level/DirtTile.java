@@ -16,6 +16,7 @@ public class DirtTile extends Tile {
 		bounding = new Rectangle(x, y, size, size);
 		bounding.setBounds(x, y, size, size);
 		tileID = 0;
+		hasTree = false;
 	}
 
 	public void tick(Game game) {

@@ -6,11 +6,11 @@ import java.awt.Rectangle;
 
 import Core.Game;
 
-public class Pickaxe extends Tool {
+public class Hoe extends Tool {
 
-	public Pickaxe(Game game) {
+	public Hoe(Game game) {
 		this.game = game;
-		toolID = 2;
+		toolID = 3;
 		toolArea = new Rectangle(toolID * 32 + 68, 0, 32, 32);
 	}
 
@@ -27,7 +27,7 @@ public class Pickaxe extends Tool {
 		
 		if (toolArea.contains(game.mouseP)) {
 			g.setColor(Color.YELLOW);
-			g.drawString("PickAxe - Used for mining!", toolArea.x, toolArea.y + 42);
+			g.drawString("Hoe - Used for farming!", toolArea.x, toolArea.y + 42);
 		}
 	}
 }

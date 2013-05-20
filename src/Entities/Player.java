@@ -12,7 +12,7 @@ public class Player {
 	int width = 16, height = 32;
 	Rectangle bounding;
 	double speed = 2;
-	public int toolSelected = 0;
+	public int toolSelected = 1; // 1 = Axe, 2 = Pickaxe, 3 = Hoe, 4 = Shovel
 
 	public int directionFacing = 0; // 0 = Down, 1 = Up, 2 = Left, 3 = Right
 
@@ -20,7 +20,7 @@ public class Player {
 
 	public Player() {
 		x = Game.WIDTH / 2 - width;
-		y = Game.HEIGHT / 2 - height;
+		y = Game.HEIGHT / 2 - height - 16;
 
 		bounding = new Rectangle(x, y, width, height);
 		bounding.setBounds(x, y, width, height);
@@ -38,25 +38,25 @@ public class Player {
 
 	private void movement() {
 
-		if (game.input.left.down && canLeft) {
-			game.xOffset -= speed;
-			directionFacing = 2;
-			System.out.println(speed);
-		}
-		if (game.input.right.down && canRight) {
-			game.xOffset += speed;
-			directionFacing = 3;
-			System.out.println(speed);
-		}
-		if (game.input.up.down && canUp) {
-			game.yOffset -= speed;
-			directionFacing = 1;
-			System.out.println(speed);
-		}
-		if (game.input.down.down && canDown) {
-			game.yOffset += speed;
+		if (game.input.down.down) {
+			if (canDown)
+				game.yOffset += speed;
 			directionFacing = 0;
-			System.out.println(speed);
+		}
+		if (game.input.up.down) {
+			if (canUp)
+				game.yOffset -= speed;
+			directionFacing = 1;
+		}
+		if (game.input.left.down) {
+			if (canLeft)
+				game.xOffset -= speed;
+			directionFacing = 2;
+		}
+		if (game.input.right.down) {
+			if (canRight)
+				game.xOffset += speed;
+			directionFacing = 3;
 		}
 	}
 

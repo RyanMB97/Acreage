@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
 	public Point mouseP = new Point(-1, -1);
 
 	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.7";
+	public static final String TITLE = "Acreage In-Dev 0.0.8";
 	public static int WIDTH = 600;
 	public static int HEIGHT = 400;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);

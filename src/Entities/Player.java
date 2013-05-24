@@ -9,18 +9,30 @@ public class Player {
 	Game game;
 
 	public int x, y;
-	int width = 16, height = 32;
+	byte width = 16, height = 32;
 	Rectangle bounding;
 	double speed = 2;
-	public int toolSelected = 1; // 1 = Axe, 2 = Pickaxe, 3 = Hoe, 4 = Shovel
 
-	public int directionFacing = 0; // 0 = Down, 1 = Up, 2 = Left, 3 = Right
+	// Tools
+	public static byte toolSelected = 1; // 1 = Axe, 2 = Pickaxe, 3 = Hoe, 4 = Shovel
+	public static final byte Axe = 1;
+	public static final byte Pickaxe = 2;
+	public static final byte Hoe = 3;
+	public static final byte Shovel = 4;
 
+	// Moving
+	public byte directionFacing = 0; // 0 = Down, 1 = Up, 2 = Left, 3 = Right
+	public byte Down = 0;
+	public byte Up = 1;
+	public byte Left = 2;
+	public byte Right = 3;
+
+	// Collision Booleans
 	boolean canLeft = true, canRight = true, canUp = true, canDown = true;
 
 	public Player() {
-		x = Game.WIDTH / 2 - width;
-		y = Game.HEIGHT / 2 - height - 16;
+		x = Game.WIDTH / 2 - width / 2;
+		y = Game.HEIGHT / 2 - height / 2;
 
 		bounding = new Rectangle(x, y, width, height);
 		bounding.setBounds(x, y, width, height);
@@ -28,6 +40,8 @@ public class Player {
 
 	public void tick(Game game) {
 		this.game = game;
+		x = Game.WIDTH / 2 - width / 2;
+		y = Game.HEIGHT / 2 - height / 2;
 		bounding.setBounds(x, y, width, height);
 		speed = 2 * game.delta;
 
@@ -41,22 +55,22 @@ public class Player {
 		if (game.input.down.down) {
 			if (canDown)
 				game.yOffset += speed;
-			directionFacing = 0;
+			directionFacing = Down;
 		}
 		if (game.input.up.down) {
 			if (canUp)
 				game.yOffset -= speed;
-			directionFacing = 1;
+			directionFacing = Up;
 		}
 		if (game.input.left.down) {
 			if (canLeft)
 				game.xOffset -= speed;
-			directionFacing = 2;
+			directionFacing = Left;
 		}
 		if (game.input.right.down) {
 			if (canRight)
 				game.xOffset += speed;
-			directionFacing = 3;
+			directionFacing = Right;
 		}
 	}
 
@@ -87,8 +101,6 @@ public class Player {
 	}
 
 	public void render(Graphics g) {
-		// g.setColor(Color.RED);
-		// g.fill3DRect(x, y, width, height, false);
 		g.drawImage(game.res.playerFaces[directionFacing], x, y, game);
 	}
 }

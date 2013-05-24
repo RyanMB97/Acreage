@@ -10,12 +10,14 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import Entities.Player;
+
 public class InputHandler implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
 	public class Key {
 
 		public boolean down, clicked;
-		private int absorbs, presses;
+		private short absorbs, presses;
 
 		public void tick() {
 			if (absorbs < presses) {
@@ -41,6 +43,8 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		}
 	}
 
+	Game game;
+
 	public List<Key> keys = new ArrayList<Key>();
 
 	public Key left = new Key();
@@ -49,7 +53,8 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	public Key down = new Key();
 	public Key I = new Key();
 
-	Game game;
+	public Key itemUp = new Key();
+	public Key itemDown = new Key();
 
 	public boolean leftButton = false;
 	public boolean rightButton = false;
@@ -110,16 +115,16 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling down
-			if (game.player.toolSelected > 1) { // If the tileSelection is greater than 0
-				game.player.toolSelected--; // Lower tileSelection
+			if (Player.toolSelected > 1) { // If the tileSelection is greater than 0
+				Player.toolSelected--; // Lower tileSelection
 			} else { // If not
-				game.player.toolSelected = game.tools.length; // Set the tileSelection back to maximum
+				Player.toolSelected = 5; // Set the tileSelection back to maximum
 			}
 		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
-			if (game.player.toolSelected < game.tools.length) { // If tileSelection is lower than the maximum tiles
-				game.player.toolSelected++; // Increase tileSelection
+			if (Player.toolSelected < 5) { // If tileSelection is lower than the maximum tiles
+				Player.toolSelected++; // Increase tileSelection
 			} else { // If not
-				game.player.toolSelected = 1; // Set to 0
+				Player.toolSelected = 1; // Set to 0
 			}
 		}
 	}
@@ -137,13 +142,14 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	}
 
 	public void toggle(KeyEvent e, boolean pressed) {
-		if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT)
+		// Movement
+		if (e.getKeyCode() == KeyEvent.VK_A)
 			left.toggle(pressed);
-		if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT)
+		if (e.getKeyCode() == KeyEvent.VK_D)
 			right.toggle(pressed);
-		if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP)
+		if (e.getKeyCode() == KeyEvent.VK_W)
 			up.toggle(pressed);
-		if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN)
+		if (e.getKeyCode() == KeyEvent.VK_S)
 			down.toggle(pressed);
 	}
 
@@ -157,18 +163,32 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 			game.showGrid = !game.showGrid;
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
+
 		// Tool Selection
 		if (e.getKeyCode() == KeyEvent.VK_1)
-			game.player.toolSelected = 1;
+			Player.toolSelected = 1;
 		if (e.getKeyCode() == KeyEvent.VK_2)
-			game.player.toolSelected = 2;
+			Player.toolSelected = 2;
 		if (e.getKeyCode() == KeyEvent.VK_3)
-			game.player.toolSelected = 3;
+			Player.toolSelected = 3;
 		if (e.getKeyCode() == KeyEvent.VK_4)
-			game.player.toolSelected = 4;
+			Player.toolSelected = 4;
 		if (e.getKeyCode() == KeyEvent.VK_5)
-			game.player.toolSelected = 5;
+			Player.toolSelected = 5;
 
+		// Item Selection
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			if (game.inv.itemSelected > 0)
+				game.inv.itemSelected--;
+			else
+				game.inv.itemSelected = (byte) (game.inv.resourceNames.length - 1);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			if (game.inv.itemSelected < game.inv.resourceNames.length - 1)
+				game.inv.itemSelected++;
+			else
+				game.inv.itemSelected = 0;
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {

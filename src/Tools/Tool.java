@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import Core.Game;
 
 public abstract class Tool extends Item {
-	int toolID;
+	byte toolID;
 	public Rectangle toolArea;
 	Game game;
 

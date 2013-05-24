@@ -2,24 +2,23 @@ package Level;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
 
 import Core.Game;
+import Core.GameResourceLoader;
 
 public class GrassTile extends Tile {
+	private static final long serialVersionUID = 1L;
 
 	public GrassTile(int x, int y, Game game) {
 		this.game = game;
 		oX = x;
 		oY = y;
 
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+		setBounds(x, y, size, size);
 		tileID = 3;
 
-		int randomTree = new Random().nextInt(2);
-		switch (randomTree) {
+		switch (new Random().nextInt(2)) {
 		case 0:
 			hasTree = true;
 			break;
@@ -34,15 +33,23 @@ public class GrassTile extends Tile {
 
 		x = oX - game.xOffset; // Current x after movement, Offset, etc
 		y = oY - game.yOffset; // Current y after movement, Offset, etc
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+		setBounds(x, y, size, size);
+
+		// If tile contains mouse
+		if (contains(game.mouseP)) {
+			containsMouse = true;
+		} else {
+			containsMouse = false;
+		}
+
+		Visibility();
 	}
 
 	public void render(Graphics g) {
 		if (!hasTree) {
 			g.drawImage(game.res.tiles[tileID], x, y, game);
 		} else {
-			g.drawImage(game.res.tiles[5], x, y, game);
+			g.drawImage(game.res.tiles[GameResourceLoader.Tree], x, y, game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids
@@ -50,8 +57,8 @@ public class GrassTile extends Tile {
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around tile
 		}
 
-		if (showBorders) { // If it is allowed to show borders
-			g.setColor(Color.BLACK); // White color
+		if (containsMouse) { // If it is allowed to show borders
+			g.setColor(Color.BLACK); // Black color
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
 		}
 	}

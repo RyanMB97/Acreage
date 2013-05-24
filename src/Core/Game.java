@@ -13,14 +13,11 @@ import javax.swing.JFrame;
 
 import Entities.Player;
 import Level.Level;
-import Tools.Axe;
-import Tools.Hoe;
-import Tools.Pickaxe;
-import Tools.Shovel;
-import Tools.Tool;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
+
+	Thread AcreageThread;
 
 	BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	public InputHandler input;
@@ -32,17 +29,15 @@ public class Game extends Canvas implements Runnable {
 
 	public Point mouseP = new Point(-1, -1);
 
-	public Tool tools[] = new Tool[4];
-
 	public static boolean running = false;
 	public static final String TITLE = "Acreage In-Dev 0.0.7";
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 400;
+	public static int WIDTH = 600;
+	public static int HEIGHT = 400;
 	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
 
-	public int worldWidth = 150;
-	public int worldHeight = 150;
+	public int worldWidth = 350;
+	public int worldHeight = 350;
 
 	public int xOffset = 0;
 	public int yOffset = 0;
@@ -59,7 +54,7 @@ public class Game extends Canvas implements Runnable {
 	public boolean showGrid = false;
 
 	// Used in the "run" method to limit the frame rate to the UPS
-	boolean limitFrameRate = true;
+	boolean limitFrameRate = false;
 	boolean shouldRender;
 
 	public void run() {
@@ -69,17 +64,15 @@ public class Game extends Canvas implements Runnable {
 		long lastTimer = System.currentTimeMillis();
 		delta = 0D;
 
+		createBufferStrategy(4);
+
 		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / nsPerTick;
 			lastTime = now;
 
 			// If you want to limit frame rate, shouldRender = false
-			if (limitFrameRate) {
-				shouldRender = false;
-			} else {
-				shouldRender = true;
-			}
+			shouldRender = false;
 
 			// If the time between ticks = 1, then various things (shouldRender = true, keeps FPS locked at UPS)
 			while (delta >= 1) {
@@ -88,6 +81,8 @@ public class Game extends Canvas implements Runnable {
 				delta -= 1;
 				shouldRender = true;
 			}
+			if (!limitFrameRate && ticks > 0)
+				shouldRender = true;
 
 			// If you should render, render!
 			if (shouldRender) {
@@ -109,7 +104,8 @@ public class Game extends Canvas implements Runnable {
 
 	public synchronized void start() {
 		running = true;
-		new Thread(this).start();
+		AcreageThread = new Thread(this);
+		AcreageThread.start();
 	}
 
 	public static synchronized void stop() {
@@ -118,6 +114,8 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public Game() { // Typical stuff
+		init();
+
 		setMinimumSize(gameDim);
 		setMaximumSize(gameDim);
 		setPreferredSize(gameDim);
@@ -129,11 +127,9 @@ public class Game extends Canvas implements Runnable {
 		frame.add(this, BorderLayout.CENTER);
 		frame.pack();
 
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
-		init();
 
 		requestFocus();
 	}
@@ -142,30 +138,21 @@ public class Game extends Canvas implements Runnable {
 		input = new InputHandler(this);
 		level = new Level(this);
 		player = new Player();
-		inv = new Inventory();
+		inv = new Inventory(this);
 		debug = new Debug(this);
-
-		tools[0] = new Axe(this);
-		tools[1] = new Pickaxe(this);
-		tools[2] = new Shovel(this);
-		tools[3] = new Hoe(this);
 	}
 
 	public void tick() {
-		for (int i = 0; i < tools.length; i++) {
-			tools[i].tick(this);
-		}
+		WIDTH = getWidth();
+		HEIGHT = getHeight();
+
 		player.tick(this);
 		level.updateLevel(this);
+		inv.tick();
 	}
 
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
-
-		if (bs == null) {
-			createBufferStrategy(3);
-			return;
-		}
 
 		Graphics g = bs.getDrawGraphics();
 
@@ -175,16 +162,12 @@ public class Game extends Canvas implements Runnable {
 		player.render(g);
 		inv.render(g);
 
-		if (showDebug) {
+		if (showDebug)
 			debug.render(g);
-		}
 
-		for (int i = 0; i < tools.length; i++) {
-			tools[i].render(g);
-		}
-		
+		g.drawImage(res.toolMap, 32 + 68, 0, null);
 		g.setColor(Color.DARK_GRAY);
-		g.drawRect(player.toolSelected * 32 + 68, 0, 32, 32);
+		g.drawRect(Player.toolSelected * 32 + 68, 0, 32, 32);
 
 		g.dispose();
 		bs.show();

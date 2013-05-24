@@ -2,21 +2,19 @@ package Level;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import Core.Game;
 
 public class DirtTile extends Tile {
+	private static final long serialVersionUID = 1L;
 
 	public DirtTile(int x, int y, Game game) {
 		this.game = game;
 		this.oX = x;
 		this.oY = y;
-		
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+
+		setBounds(x, y, size, size);
 		tileID = 0;
-		hasTree = false;
 	}
 
 	public void tick(Game game) {
@@ -24,8 +22,16 @@ public class DirtTile extends Tile {
 
 		x = oX - game.xOffset; // Current x after movement, Offset, etc
 		y = oY - game.yOffset; // Current y after movement, Offset, etc
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+		setBounds(x, y, size, size);
+
+		// If tile contains mouse
+		if (contains(game.mouseP)) {
+			containsMouse = true;
+		} else {
+			containsMouse = false;
+		}
+
+		Visibility();
 	}
 
 	public void render(Graphics g) {
@@ -36,8 +42,8 @@ public class DirtTile extends Tile {
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around tile
 		}
 
-		if (showBorders) { // If it is allowed to show borders
-			g.setColor(Color.BLACK); // White color
+		if (containsMouse) { // If it is allowed to show borders
+			g.setColor(Color.BLACK); // Black color
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
 		}
 	}

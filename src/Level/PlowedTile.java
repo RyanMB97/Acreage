@@ -2,19 +2,20 @@ package Level;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import Core.Game;
 
 public class PlowedTile extends Tile {
+	private static final long serialVersionUID = 1L;
+
+	int plantGrowTicks = 0;
 
 	public PlowedTile(int x, int y, Game game) {
 		this.game = game;
 		this.oX = x;
 		this.oY = y;
 
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+		setBounds(x, y, size, size);
 		tileID = 1;
 	}
 
@@ -23,15 +24,29 @@ public class PlowedTile extends Tile {
 
 		x = oX - game.xOffset; // Current x after movement, Offset, etc
 		y = oY - game.yOffset; // Current y after movement, Offset, etc
-		bounding = new Rectangle(x, y, size, size);
-		bounding.setBounds(x, y, size, size);
+		setBounds(x, y, size, size);
 
+		plantGrowth();
+
+		// If tile contains mouse
+		if (contains(game.mouseP)) {
+			containsMouse = true;
+		} else {
+			containsMouse = false;
+		}
+
+		Visibility();
+	}
+
+	private void plantGrowth() {
 		if (hasPlants && plantGrowth < growthTime) {
-			if (game.ticks % 60 == 0) {
+			if (plantGrowTicks % 120 == 0) {
 				plantGrowth++;
 			}
+			plantGrowTicks++;
 		} else if (!hasPlants) {
 			plantGrowth = 0;
+			plantGrowTicks = 0;
 		}
 	}
 
@@ -47,8 +62,8 @@ public class PlowedTile extends Tile {
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around tile
 		}
 
-		if (showBorders) { // If it is allowed to show borders
-			g.setColor(Color.BLACK); // White color
+		if (containsMouse) { // If it is allowed to show borders
+			g.setColor(Color.BLACK); // Black color
 			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
 		}
 

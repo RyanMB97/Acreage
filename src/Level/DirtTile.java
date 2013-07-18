@@ -4,47 +4,51 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import Core.Game;
+import Core.GameResourceLoader;
 
 public class DirtTile extends Tile {
-	private static final long serialVersionUID = 1L;
 
 	public DirtTile(int x, int y, Game game) {
 		this.game = game;
-		this.oX = x;
-		this.oY = y;
+		this.setoX(x);
+		this.setoY(y);
 
-		setBounds(x, y, size, size);
-		tileID = 0;
+		setTileBoundaries(x, y, getTileSize(), getTileSize());
+		setTileID(0);
 	}
 
 	public void tick(Game game) {
 		this.game = game;
 
-		x = oX - game.xOffset; // Current x after movement, Offset, etc
-		y = oY - game.yOffset; // Current y after movement, Offset, etc
-		setBounds(x, y, size, size);
+		setX(getoX() - game.xOffset); // Current x after movement, Offset, etc
+		setY(getoY() - game.yOffset); // Current y after movement, Offset, etc
+		getTileBoundaries().setBounds(getX(), getY(), getTileSize(), getTileSize());
 
 		// If tile contains mouse
-		if (contains(game.mouseP)) {
-			containsMouse = true;
+		if (getTileBoundaries().contains(game.mouseP)) {
+			setContainsMouse(true);
 		} else {
-			containsMouse = false;
+			setContainsMouse(false);
 		}
 
 		Visibility();
 	}
 
+	@Override
 	public void render(Graphics g) {
-		g.drawImage(game.res.tiles[tileID], x, y, game);
+		g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
+		if (isHasWall()) {
+			g.drawImage(game.res.tiles[GameResourceLoader.logWall], getX(), getY(), game);
+		}
 
 		if (game.showGrid) { // If the player wants to draw grids
 			g.setColor(Color.WHITE); // White color
-			g.drawRect(x, y, size - 1, size - 1); // Draw a border around tile
+			g.drawRect(getX(), getY(), getTileSize() - 1, getTileSize() - 1); // Draw a border around tile
 		}
 
-		if (containsMouse) { // If it is allowed to show borders
+		if (isContainsMouse() && isCanAffect()) { // If it is allowed to show borders
 			g.setColor(Color.BLACK); // Black color
-			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
+			g.drawRect(getX(), getY(), getTileSize() - 1, getTileSize() - 1); // Draw a border around image
 		}
 	}
 }

@@ -19,9 +19,8 @@ public class Game extends Canvas implements Runnable {
 
 	Thread AcreageThread;
 
-	BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	public InputHandler input;
-	public GameResourceLoader res = new GameResourceLoader();
+	public GameResourceLoader res;
 	public Level level;
 	public Player player;
 	public Inventory inv;
@@ -29,11 +28,12 @@ public class Game extends Canvas implements Runnable {
 
 	public Point mouseP = new Point(-1, -1);
 
-	public static boolean running = false;
-	public static final String TITLE = "Acreage In-Dev 0.0.8";
-	public static int WIDTH = 600;
-	public static int HEIGHT = 400;
-	public static final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
+	private static boolean running = false;
+	private static final String TITLE = "Acreage In-Dev 0.0.8";
+	private final int WIDTH = 640;
+	private final int HEIGHT = 480;
+	BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private final Dimension gameDim = new Dimension(WIDTH, HEIGHT);
 	JFrame frame;
 
 	public int worldWidth = 350;
@@ -43,7 +43,7 @@ public class Game extends Canvas implements Runnable {
 	public int yOffset = 0;
 
 	// Variables for the FPS and UPS counter
-	public int ticks = 0;
+	private int ticks = 0;
 	private int frames = 0;
 	private int FPS = 0;
 	private int UPS = 0;
@@ -57,14 +57,13 @@ public class Game extends Canvas implements Runnable {
 	boolean limitFrameRate = false;
 	boolean shouldRender;
 
+	@Override
 	public void run() {
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000D / 60D;
 
 		long lastTimer = System.currentTimeMillis();
 		delta = 0D;
-
-		createBufferStrategy(4);
 
 		while (running) {
 			long now = System.nanoTime();
@@ -114,8 +113,6 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public Game() { // Typical stuff
-		init();
-
 		setMinimumSize(gameDim);
 		setMaximumSize(gameDim);
 		setPreferredSize(gameDim);
@@ -127,32 +124,37 @@ public class Game extends Canvas implements Runnable {
 		frame.add(this, BorderLayout.CENTER);
 		frame.pack();
 
-		frame.setResizable(true);
-		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 
 		requestFocus();
+		
+		init();
 	}
 
 	private void init() {
+		res = new GameResourceLoader();
 		input = new InputHandler(this);
 		level = new Level(this);
-		player = new Player();
+		player = new Player(this);
 		inv = new Inventory(this);
 		debug = new Debug(this);
 	}
 
 	public void tick() {
-		WIDTH = getWidth();
-		HEIGHT = getHeight();
-
-		player.tick(this);
+		player.tick();
 		level.updateLevel(this);
 		inv.tick();
 	}
 
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
+
+		if (bs == null) {
+			createBufferStrategy(3);
+			return;
+		}
 
 		Graphics g = bs.getDrawGraphics();
 

@@ -5,39 +5,177 @@ import java.awt.Rectangle;
 
 import Core.Game;
 
-public abstract class Tile extends Rectangle {
-	private static final long serialVersionUID = 1L;
+public abstract class Tile {
+	private Rectangle tileBoundaries;
 
 	Game game;
-	public int x, y;
-	public int tileID;
-	public int oX, oY; // Original x,y coords when created
-	public static int size = 32; // Size of tiles
+	private int x, y;
+	private int tileID;
+	private int oX, oY; // Original x,y coordinates when created
+	private final int tileSize = 32; // Size of tiles
+	private boolean isCollidable;
+
+	private boolean canAffect = true;
 
 	// Plowed tile
 	boolean hasPlants = false;
-	int plantGrowth = 0;
-	int growthTime = 4;
+	private int plantGrowth = 0;
+	private int growthTime = 4;
 
 	// Used for other images
-	boolean hasRock = false; // Stone tile
-	boolean hasOre = false; // Stone tile
-	int oreAmount = 0; // Amount of Ore, if any within Vein
-	boolean hasTree = false; // Grass tile
+	private boolean hasRock = false; // Stone tile
+	private boolean hasOre = false; // Stone tile
+	private int oreAmount = 0; // Amount of Ore, if any within Vein
+	private boolean hasTree = false; // Grass tile
+	private boolean hasWall = false;
 
 	// Misc
-	boolean isVisible;
-	boolean containsMouse;
+	public boolean isVisible; // If the tile is within the JFrame area
+	private boolean containsMouse; // If the tile has the mouse in it
 
 	public abstract void tick(Game game);
 
 	public abstract void render(Graphics g);
 
-	protected void Visibility() {
-		if (x >= 0 - 32 && x <= game.getWidth() + 32 && y >= 0 - 32 && y <= game.getHeight() + 32) {
+	protected void Visibility() { // Check if the tile is within the JFrame area
+		if (getX() >= 0 - 32 && getX() <= game.getWidth() + 32 && getY() >= 0 - 32 && getY() <= game.getHeight() + 32) {
 			isVisible = true;
 		} else {
 			isVisible = false;
 		}
+	}
+
+	// Getters and Setters
+
+	public int getTileID() {
+		return tileID;
+	}
+
+	public void setTileID(int tileID) {
+		this.tileID = tileID;
+	}
+
+	public int getoX() {
+		return oX;
+	}
+
+	public void setoX(int oX) {
+		this.oX = oX;
+	}
+
+	public int getoY() {
+		return oY;
+	}
+
+	public void setoY(int oY) {
+		this.oY = oY;
+	}
+
+	public boolean isCanAffect() {
+		return canAffect;
+	}
+
+	public void setCanAffect(boolean canAffect) {
+		this.canAffect = canAffect;
+	}
+
+	public int getPlantGrowth() {
+		return plantGrowth;
+	}
+
+	public void setPlantGrowth(int plantGrowth) {
+		this.plantGrowth = plantGrowth;
+	}
+
+	public int getGrowthTime() {
+		return growthTime;
+	}
+
+	public void setGrowthTime(int growthTime) {
+		this.growthTime = growthTime;
+	}
+
+	public boolean isHasRock() {
+		return hasRock;
+	}
+
+	public void setHasRock(boolean hasRock) {
+		this.hasRock = hasRock;
+	}
+
+	public boolean isHasOre() {
+		return hasOre;
+	}
+
+	public void setHasOre(boolean hasOre) {
+		this.hasOre = hasOre;
+	}
+
+	public int getOreAmount() {
+		return oreAmount;
+	}
+
+	public void setOreAmount(int oreAmount) {
+		this.oreAmount = oreAmount;
+	}
+
+	public boolean isHasTree() {
+		return hasTree;
+	}
+
+	public void setHasTree(boolean hasTree) {
+		this.hasTree = hasTree;
+	}
+
+	public boolean isHasWall() {
+		return hasWall;
+	}
+
+	public void setHasWall(boolean hasWall) {
+		this.hasWall = hasWall;
+	}
+
+	public boolean isContainsMouse() {
+		return containsMouse;
+	}
+
+	public void setContainsMouse(boolean containsMouse) {
+		this.containsMouse = containsMouse;
+	}
+
+	public int getTileSize() {
+		return tileSize;
+	}
+
+	public boolean isCollidable() {
+		return isCollidable;
+	}
+
+	public void setCollidable(boolean isCollidable) {
+		this.isCollidable = isCollidable;
+	}
+
+	public Rectangle getTileBoundaries() {
+		return tileBoundaries;
+	}
+
+	public void setTileBoundaries(int x, int y, int width, int height) {
+		this.tileBoundaries = new Rectangle(x, y, width, height);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 }

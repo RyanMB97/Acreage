@@ -67,18 +67,22 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		this.game = game;
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) { // If left button pressed
 			leftButton = true;
@@ -88,6 +92,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		}
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) { // If left button pressed
 			leftButton = false;
@@ -97,6 +102,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		}
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		game.mouseP = e.getPoint();
 
@@ -108,23 +114,25 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		}
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		game.mouseP = e.getPoint(); // Grab mouse position
 
 	}
 
+	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling down
-			if (Player.toolSelected > 1) { // If the tileSelection is greater than 0
-				Player.toolSelected--; // Lower tileSelection
+			if (game.inv.itemSelected > 0) { // If the tileSelection is greater than 0
+				game.inv.itemSelected--; // Lower tileSelection
 			} else { // If not
-				Player.toolSelected = 5; // Set the tileSelection back to maximum
+				game.inv.itemSelected = (byte) (game.inv.resourceNames.length - 1); // Set the tileSelection back to maximum
 			}
 		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
-			if (Player.toolSelected < 5) { // If tileSelection is lower than the maximum tiles
-				Player.toolSelected++; // Increase tileSelection
+			if (game.inv.itemSelected < (byte) (game.inv.resourceNames.length - 1)) { // If tileSelection is lower than the maximum tiles
+				game.inv.itemSelected++; // Increase tileSelection
 			} else { // If not
-				Player.toolSelected = 1; // Set to 0
+				game.inv.itemSelected = 0; // Set to 0
 			}
 		}
 	}
@@ -153,6 +161,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 			down.toggle(pressed);
 	}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 		toggle(e, true);
 
@@ -191,10 +200,12 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 		}
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {
 		toggle(e, false);
 	}
 
+	@Override
 	public void keyTyped(KeyEvent e) {
 
 	}

@@ -13,10 +13,11 @@ public class GameResourceLoader {
 	public static byte Rock = 4;
 	public static byte Tree = 5;
 	public static byte Metal = 6;
+	public static byte road = 7;
+	public static byte logWall = 8;
 
-	public BufferedImage tileMap; // All tiles in one image to be seperated
-	public BufferedImage tiles[] = new BufferedImage[10]; // Each seperate tile
-	public String tileNames[] = { "Dirt", "Plowed Earth", "Stone", "Grass", "Stone w/ Rock", "Grass w/ Tree", "Rock w/ Metal Vein", "Null", "Null", "Null" }; // Names of tiles
+	public BufferedImage tileMap; // All tiles in one image to be separated
+	public BufferedImage tiles[] = new BufferedImage[10]; // Each separate tile
 
 	public BufferedImage plantMap;
 	public BufferedImage plants[] = new BufferedImage[5];

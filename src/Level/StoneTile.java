@@ -8,15 +8,14 @@ import Core.Game;
 import Core.GameResourceLoader;
 
 public class StoneTile extends Tile {
-	private static final long serialVersionUID = 1L;
 
 	public StoneTile(int x, int y, Game game) {
 		this.game = game;
-		this.oX = x;
-		this.oY = y;
+		this.setoX(x);
+		this.setoY(y);
 
-		setBounds(x, y, size, size);
-		tileID = 2;
+		setTileBoundaries(x, y, getTileSize(), getTileSize());
+		setTileID(2);
 
 		generateRockOre();
 	}
@@ -24,67 +23,70 @@ public class StoneTile extends Tile {
 	private void generateRockOre() {
 		switch (new Random().nextInt(2)) { // Switch a random int, 0 or 1 for a Rock
 		case 0:
-			hasRock = true;
+			setHasRock(true);
 			break;
 		case 1:
-			hasRock = false;
+			setHasRock(false);
 			break;
 		}
 
-		if (hasRock) {
+		if (isHasRock()) {
 			switch (new Random().nextInt(2)) { // Switch a random int, 0 or 1 for Ore
 			case 0:
-				hasOre = true;
+				setHasOre(true);
 				break;
 			case 1:
-				hasOre = false;
+				setHasOre(false);
 				break;
 			}
 		}
 
-		if (hasOre) {
-			oreAmount = new Random().nextInt(5);
+		if (isHasOre()) {
+			setOreAmount(new Random().nextInt(5));
 		}
 	} // End Generate RockOre
 
 	public void tick(Game game) {
 		this.game = game;
 
-		x = oX - game.xOffset; // Current x after movement, Offset, etc
-		y = oY - game.yOffset; // Current y after movement, Offset, etc
-		setBounds(x, y, size, size);
+		setX(getoX() - game.xOffset); // Current x after movement, Offset, etc
+		setY(getoY() - game.yOffset); // Current y after movement, Offset, etc
+		getTileBoundaries().setBounds(getX(), getY(), getTileSize(), getTileSize());
 
-		if (oreAmount <= 0) {
-			hasOre = false;
+		if (getOreAmount() <= 0) {
+			setHasOre(false);
 		}
 
 		// If tile contains mouse
-		if (contains(game.mouseP)) {
-			containsMouse = true;
+		if (getTileBoundaries().contains(game.mouseP)) {
+			setContainsMouse(true);
 		} else {
-			containsMouse = false;
+			setContainsMouse(false);
 		}
 
 		Visibility();
 	}
 
+	@Override
 	public void render(Graphics g) {
-		if (!hasRock) {
-			g.drawImage(game.res.tiles[tileID], x, y, game);
-		} else if (hasRock && !hasOre) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Rock], x, y, game);
-		} else if (hasRock && hasOre) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Metal], x, y, game);
+		if (!isHasRock() && !isHasWall()) {
+			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
+		} else if (isHasRock() && !isHasOre()) {
+			g.drawImage(game.res.tiles[GameResourceLoader.Rock], getX(), getY(), game);
+		} else if (isHasRock() && isHasOre()) {
+			g.drawImage(game.res.tiles[GameResourceLoader.Metal], getX(), getY(), game);
+		} else if (isHasWall()) {
+			g.drawImage(game.res.tiles[GameResourceLoader.logWall], getX(), getY(), game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids
 			g.setColor(Color.WHITE); // White color
-			g.drawRect(x, y, size - 1, size - 1); // Draw a border around tile
+			g.drawRect(getX(), getY(), getTileSize() - 1, getTileSize() - 1); // Draw a border around tile
 		}
 
-		if (containsMouse) { // If it is allowed to show borders
+		if (isContainsMouse() && isCanAffect()) { // If it is allowed to show borders
 			g.setColor(Color.BLACK); // Black color
-			g.drawRect(x, y, size - 1, size - 1); // Draw a border around image
+			g.drawRect(getX(), getY(), getTileSize() - 1, getTileSize() - 1); // Draw a border around image
 		}
 	}
 }

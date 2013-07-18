@@ -2,29 +2,19 @@ package Level;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Random;
 
 import Core.Game;
 import Core.GameResourceLoader;
 
-public class GrassTile extends Tile {
+public class RoadTile extends Tile {
 
-	public GrassTile(int x, int y, Game game) {
+	public RoadTile(int x, int y, Game game) {
 		this.game = game;
-		setoX(x);
-		setoY(y);
+		this.setoX(x);
+		this.setoY(y);
 
 		setTileBoundaries(x, y, getTileSize(), getTileSize());
-		setTileID(3);
-
-		switch (new Random().nextInt(2)) {
-		case 0:
-			setHasTree(true);
-			break;
-		case 1:
-			setHasTree(false);
-			break;
-		}
+		setTileID(7);
 	}
 
 	public void tick(Game game) {
@@ -46,12 +36,10 @@ public class GrassTile extends Tile {
 
 	@Override
 	public void render(Graphics g) {
-		if (!isHasTree() && !isHasWall()) {
-			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
-		} else if (isHasTree()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Tree], getX(), getY(), game);
-		} else if (isHasWall()) {
+		if (isHasWall()) {
 			g.drawImage(game.res.tiles[GameResourceLoader.logWall], getX(), getY(), game);
+		} else {
+			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids
@@ -64,4 +52,5 @@ public class GrassTile extends Tile {
 			g.drawRect(getX(), getY(), getTileSize() - 1, getTileSize() - 1); // Draw a border around image
 		}
 	}
+
 }

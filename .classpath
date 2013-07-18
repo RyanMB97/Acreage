@@ -3,5 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="res"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Dropbox/Java Libraries/ImageScaler/imgscalr-lib-4.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Dropbox/Java Libraries/ImageScaler/imgscalr-lib-4.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ryan/Dropbox/Java Libraries/ImageScaler/imgscalr-lib-4.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

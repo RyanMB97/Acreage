@@ -9,7 +9,7 @@ public abstract class Tile {
 	private Rectangle tileBoundaries;
 
 	Game game;
-	private int x, y;
+	private int x, y, tileX, tileY;
 	private int tileID;
 	private int oX, oY; // Original x,y coordinates when created
 	private final int tileSize = 32; // Size of tiles
@@ -43,6 +43,11 @@ public abstract class Tile {
 		} else {
 			isVisible = false;
 		}
+	}
+	
+	protected void setTilePos(){
+		setTileX(x / 32);
+		setTileY(y / 32);
 	}
 
 	// Getters and Setters
@@ -177,5 +182,21 @@ public abstract class Tile {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public int getTileX() {
+		return tileX;
+	}
+
+	public void setTileX(int tileX) {
+		this.tileX = tileX;
+	}
+
+	public int getTileY() {
+		return tileY;
+	}
+
+	public void setTileY(int tileY) {
+		this.tileY = tileY;
 	}
 }

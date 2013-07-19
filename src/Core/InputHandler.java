@@ -123,16 +123,16 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() > 0) { // If scrolling down
-			if (game.inv.itemSelected > 0) { // If the tileSelection is greater than 0
-				game.inv.itemSelected--; // Lower tileSelection
+			if (game.getInv().itemSelected > 0) { // If the tileSelection is greater than 0
+				game.getInv().itemSelected--; // Lower tileSelection
 			} else { // If not
-				game.inv.itemSelected = (byte) (game.inv.resourceNames.length - 1); // Set the tileSelection back to maximum
+				game.getInv().itemSelected = (byte) (game.getInv().resourceNames.length - 1); // Set the tileSelection back to maximum
 			}
 		} else if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && e.getWheelRotation() < 0) { // If scrolling up
-			if (game.inv.itemSelected < (byte) (game.inv.resourceNames.length - 1)) { // If tileSelection is lower than the maximum tiles
-				game.inv.itemSelected++; // Increase tileSelection
+			if (game.getInv().itemSelected < (byte) (game.getInv().resourceNames.length - 1)) { // If tileSelection is lower than the maximum tiles
+				game.getInv().itemSelected++; // Increase tileSelection
 			} else { // If not
-				game.inv.itemSelected = 0; // Set to 0
+				game.getInv().itemSelected = 0; // Set to 0
 			}
 		}
 	}
@@ -187,16 +187,16 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
 		// Item Selection
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			if (game.inv.itemSelected > 0)
-				game.inv.itemSelected--;
+			if (game.getInv().itemSelected > 0)
+				game.getInv().itemSelected--;
 			else
-				game.inv.itemSelected = (byte) (game.inv.resourceNames.length - 1);
+				game.getInv().itemSelected = (byte) (game.getInv().resourceNames.length - 1);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (game.inv.itemSelected < game.inv.resourceNames.length - 1)
-				game.inv.itemSelected++;
+			if (game.getInv().itemSelected < game.getInv().resourceNames.length - 1)
+				game.getInv().itemSelected++;
 			else
-				game.inv.itemSelected = 0;
+				game.getInv().itemSelected = 0;
 		}
 	}
 

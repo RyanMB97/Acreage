@@ -21,9 +21,9 @@ public class Debug {
 
 		// Write info
 		g.setColor(Color.WHITE);
-		g.drawString("Player X: " + game.player.worldX, debugArea.x, 10);
-		g.drawString("Player Y: " + game.player.worldY, debugArea.x, 25);
-		g.drawString("Player Tile X: " + game.player.tileX, debugArea.x, 40);
-		g.drawString("Player Tile Y: " + game.player.tileY, debugArea.x, 55);
+		g.drawString("Player X: " + game.getPlayer().getWorldX(), debugArea.x, 10);
+		g.drawString("Player Y: " + game.getPlayer().getWorldY(), debugArea.x, 25);
+		g.drawString("Player Tile X: " + game.getPlayer().getTileX(), debugArea.x, 40);
+		g.drawString("Player Tile Y: " + game.getPlayer().getTileY(), debugArea.x, 55);
 	}
 }

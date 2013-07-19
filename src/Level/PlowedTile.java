@@ -13,9 +13,9 @@ public class PlowedTile extends Tile {
 		this.game = game;
 		this.setoX(x);
 		this.setoY(y);
+		setTileID(1);
 
 		setTileBoundaries(x, y, getTileSize(), getTileSize());
-		setTileID(1);
 	}
 
 	public void tick(Game game) {
@@ -24,6 +24,7 @@ public class PlowedTile extends Tile {
 		setX(getoX() - game.xOffset); // Current x after movement, Offset, etc
 		setY(getoY() - game.yOffset); // Current y after movement, Offset, etc
 		getTileBoundaries().setBounds(getX(), getY(), getTileSize(), getTileSize());
+		setTilePos();
 
 		plantGrowth();
 
@@ -52,9 +53,9 @@ public class PlowedTile extends Tile {
 	@Override
 	public void render(Graphics g) {
 		if (hasPlants) {
-			g.drawImage(game.res.plants[getPlantGrowth()], getX(), getY(), game);
+			g.drawImage(game.getRes().plants[getPlantGrowth()], getX(), getY(), game);
 		} else if (!hasPlants) {
-			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[getTileID()], getX(), getY(), game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids

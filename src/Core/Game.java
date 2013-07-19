@@ -17,14 +17,14 @@ import Level.Level;
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	Thread AcreageThread;
+	private Thread AcreageThread;
 
-	public InputHandler input;
-	public GameResourceLoader res;
-	public Level level;
-	public Player player;
-	public Inventory inv;
-	public Debug debug;
+	private InputHandler input;
+	private GameResourceLoader res;
+	private Level level;
+	private Player player;
+	private Inventory inv;
+	private Debug debug;
 
 	public Point mouseP = new Point(-1, -1);
 
@@ -134,18 +134,18 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void init() {
-		res = new GameResourceLoader();
-		input = new InputHandler(this);
+		setRes(new GameResourceLoader());
+		setInput(new InputHandler(this));
 		level = new Level(this);
-		player = new Player(this);
-		inv = new Inventory(this);
+		setPlayer(new Player(this));
+		setInv(new Inventory(this));
 		debug = new Debug(this);
 	}
 
 	public void tick() {
-		player.tick();
+		getPlayer().tick();
 		level.updateLevel(this);
-		inv.tick();
+		getInv().tick();
 	}
 
 	public void render() {
@@ -158,20 +158,55 @@ public class Game extends Canvas implements Runnable {
 
 		Graphics g = bs.getDrawGraphics();
 
-		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 
 		level.renderLevel(g);
-		player.render(g);
-		inv.render(g);
+		getPlayer().render(g);
+		getInv().render(g);
 
 		if (showDebug)
 			debug.render(g);
 
-		g.drawImage(res.toolMap, 32 + 68, 0, null);
+		g.drawImage(getRes().toolMap, 32 + 68, 0, this);
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(Player.toolSelected * 32 + 68, 0, 32, 32);
+		g.drawImage(getRes().tools[Player.toolSelected - 1], mouseP.x + 12, mouseP.y, this);
 
 		g.dispose();
 		bs.show();
+	}
+	
+	// Getters and Setters
+
+	public InputHandler getInput() {
+		return input;
+	}
+
+	public void setInput(InputHandler input) {
+		this.input = input;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Inventory getInv() {
+		return inv;
+	}
+
+	public void setInv(Inventory inv) {
+		this.inv = inv;
+	}
+
+	public GameResourceLoader getRes() {
+		return res;
+	}
+
+	public void setRes(GameResourceLoader res) {
+		this.res = res;
 	}
 }

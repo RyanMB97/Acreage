@@ -9,11 +9,11 @@ import Core.Game;
 public class Player {
 	Game game;
 
-	public int x, y;
-	public int worldX, worldY;
-	public int tileX, tileY;
-	public byte width = 32;
-	public byte height = 32;
+	private int x, y;
+	private int worldX, worldY;
+	private int tileX, tileY;
+	private int width = 32;
+	private int height = 32;
 
 	public Rectangle bounding;
 	double speed = 2;
@@ -46,7 +46,7 @@ public class Player {
 		this.game = game;
 		x = game.getWidth() / 2 - width / 2;
 		y = game.getHeight() / 2 - height / 2;
-		playerCenter = new Point(worldX - width / 2, worldY - height / 2);
+		playerCenter = new Point(getWorldX() - width / 2, getWorldY() - height / 2);
 
 		bounding = new Rectangle(x, y, width, height);
 		bounding.setBounds(x, y, width, height);
@@ -59,30 +59,29 @@ public class Player {
 		movement();
 		worldEdgeCollision();
 
-		worldX = x + game.xOffset;
-		worldY = y + game.yOffset;
-		playerCenter = new Point(worldX - width / 2, worldY - height / 2);
-		tileX = worldX / 32;
-		tileY = worldY / 32;
+		setWorldX(x + game.xOffset);
+		setWorldY(y + game.yOffset);
+		setTileX(getWorldX() / 32);
+		setTileY(getWorldY() / 32);
 	}
 
 	private void movement() {
-		if (game.input.down.down) {
+		if (game.getInput().down.down) {
 			if (canDown)
 				game.yOffset += speed;
 			directionFacing = Down;
 		}
-		if (game.input.up.down) {
+		if (game.getInput().up.down) {
 			if (canUp)
 				game.yOffset -= speed;
 			directionFacing = Up;
 		}
-		if (game.input.left.down) {
+		if (game.getInput().left.down) {
 			if (canLeft)
 				game.xOffset -= speed;
 			directionFacing = Left;
 		}
-		if (game.input.right.down) {
+		if (game.getInput().right.down) {
 			if (canRight)
 				game.xOffset += speed;
 			directionFacing = Right;
@@ -116,6 +115,40 @@ public class Player {
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(game.res.playerFaces[directionFacing], x, y, game);
+		g.drawImage(game.getRes().playerFaces[directionFacing], x, y, game);
+	}
+	
+	// Getters and Setters
+
+	public int getTileX() {
+		return tileX;
+	}
+
+	public void setTileX(int tileX) {
+		this.tileX = tileX;
+	}
+
+	public int getTileY() {
+		return tileY;
+	}
+
+	public void setTileY(int tileY) {
+		this.tileY = tileY;
+	}
+
+	public int getWorldY() {
+		return worldY;
+	}
+
+	public void setWorldY(int worldY) {
+		this.worldY = worldY;
+	}
+
+	public int getWorldX() {
+		return worldX;
+	}
+
+	public void setWorldX(int worldX) {
+		this.worldX = worldX;
 	}
 }

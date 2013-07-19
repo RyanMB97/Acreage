@@ -52,6 +52,7 @@ public class StoneTile extends Tile {
 		setX(getoX() - game.xOffset); // Current x after movement, Offset, etc
 		setY(getoY() - game.yOffset); // Current y after movement, Offset, etc
 		getTileBoundaries().setBounds(getX(), getY(), getTileSize(), getTileSize());
+		setTilePos();
 
 		if (getOreAmount() <= 0) {
 			setHasOre(false);
@@ -70,13 +71,13 @@ public class StoneTile extends Tile {
 	@Override
 	public void render(Graphics g) {
 		if (!isHasRock() && !isHasWall()) {
-			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[getTileID()], getX(), getY(), game);
 		} else if (isHasRock() && !isHasOre()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Rock], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[GameResourceLoader.Rock], getX(), getY(), game);
 		} else if (isHasRock() && isHasOre()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Metal], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[GameResourceLoader.Metal], getX(), getY(), game);
 		} else if (isHasWall()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.logWall], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[GameResourceLoader.logWall], getX(), getY(), game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids

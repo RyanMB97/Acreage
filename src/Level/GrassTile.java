@@ -33,6 +33,7 @@ public class GrassTile extends Tile {
 		setX(getoX() - game.xOffset); // Current x after movement, Offset, etc
 		setY(getoY() - game.yOffset); // Current y after movement, Offset, etc
 		getTileBoundaries().setBounds(getX(), getY(), getTileSize(), getTileSize());
+		setTilePos();
 
 		// If tile contains mouse
 		if (getTileBoundaries().contains(game.mouseP)) {
@@ -47,11 +48,11 @@ public class GrassTile extends Tile {
 	@Override
 	public void render(Graphics g) {
 		if (!isHasTree() && !isHasWall()) {
-			g.drawImage(game.res.tiles[getTileID()], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[getTileID()], getX(), getY(), game);
 		} else if (isHasTree()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.Tree], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[GameResourceLoader.Tree], getX(), getY(), game);
 		} else if (isHasWall()) {
-			g.drawImage(game.res.tiles[GameResourceLoader.logWall], getX(), getY(), game);
+			g.drawImage(game.getRes().tiles[GameResourceLoader.logWall], getX(), getY(), game);
 		}
 
 		if (game.showGrid) { // If the player wants to draw grids
